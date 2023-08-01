@@ -14,12 +14,14 @@ interface Props {
   text?: string
   inversion?: boolean
   error?: boolean
-  loading?: boolean
+  loading?: boolean,
+  sources?: any
 }
 
 interface Emit {
   (ev: 'regenerate'): void
   (ev: 'delete'): void
+  (ev: 'show'): void
 }
 
 const props = defineProps<Props>()
@@ -81,6 +83,10 @@ function handleRegenerate() {
   emit('regenerate')
 }
 
+function showInfo() {
+  emit('show')
+}
+
 async function handleCopy() {
   try {
     await copyToClip(props.text || '')
@@ -106,7 +112,7 @@ async function handleCopy() {
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
       <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
-        {{ dateTime }}
+        {{ dateTime }}11
       </p>
       <div
         class="flex items-end gap-1 mt-2"
@@ -139,6 +145,9 @@ async function handleCopy() {
             </button>
           </NDropdown>
         </div>
+      </div>
+      <div v-if="sources && sources.length" class="inline-block text-[#b4bbc4] text-xs cursor-pointer hover:text-black  py-1" @click="showInfo">
+        点击查看来源
       </div>
     </div>
   </div>
