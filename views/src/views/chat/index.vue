@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { NAutoComplete, NButton, NDropdown, NInput, NRadioButton, NRadioGroup, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
-import { Message } from './components'
+import { Message, Source } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useUsingContext } from './hooks/useUsingContext'
@@ -41,7 +41,8 @@ const prompt = ref<string>('')
 const loading = ref<boolean>(false)
 const inputRef = ref<Ref | null>(null)
 const search = ref<string>('对话')
-
+const dialogTag = ref<boolean>(false)
+const curSource = ref<any>([])
 // 添加PromptStore
 const promptStore = usePromptStore()
 
@@ -77,8 +78,8 @@ async function handleSubmit() {
     )
     scrollToBottom()
     const res = await bing_search({ question: prompt.value })
-
-    const result = `${res.data.response}\n\n数据来源：\n\n>${res.data.source_documents.join('>')}`
+    const source_documents: any = res.data.source_documents || []
+    const result = `${res.data.response}`
     addChat(
       +uuid,
       {
@@ -89,6 +90,7 @@ async function handleSubmit() {
         error: false,
         conversationOptions: null,
         requestOptions: { prompt: message, options: { ...options } },
+        sources: source_documents,
       },
     )
     scrollToBottom()
@@ -103,6 +105,7 @@ async function handleSubmit() {
         loading: false,
         conversationOptions: null,
         requestOptions: { prompt: message, options: { ...options } },
+        sources: source_documents,
       },
     )
     prompt.value = ''
@@ -180,7 +183,8 @@ async function onConversation() {
           question: message,
           history: history.value,
         })
-      const result = active.value ? `${res.data.response}\n\n数据来源：\n\n>${res.data.source_documents.join('>')}` : res.data.response
+      const source_documents: any = res.data.source_documents || []
+      const result = active.value ? `${res.data.response}` : res.data.response
       updateChat(
         +uuid,
         dataSources.value.length - 1,
@@ -192,6 +196,7 @@ async function onConversation() {
           loading: false,
           conversationOptions: null,
           requestOptions: { prompt: message, options: { ...options } },
+          sources: source_documents,
         },
       )
       scrollToBottomIfAtBottom()
@@ -430,7 +435,10 @@ function handleExport() {
     },
   })
 }
-
+function showSource(obj: Chat.Chat) {
+  curSource.value = obj.sources
+  dialogTag.value = true
+}
 function handleDelete(index: number) {
   if (loading.value)
     return
@@ -625,10 +633,13 @@ function searchfun() {
                 :text="item.text"
                 :inversion="item.inversion"
                 :error="item.error"
+                :sources="item.sources"
                 :loading="item.loading"
                 @regenerate="onRegenerate(index)"
                 @delete="handleDelete(index)"
+                @show="showSource(item)"
               />
+              <Source :dialog-tag="dialogTag" :source="curSource"  @close="dialogTag = false" />
               <div class="sticky bottom-0 left-0 flex justify-center">
                 <NButton v-if="loading" type="warning" @click="handleStop">
                   <template #icon>
@@ -705,7 +716,6 @@ function searchfun() {
 
 <style>
 #app{
-  background-image: url(../../assets/bg.jpg);
   background-size:100% 100%;
 
 }
@@ -717,6 +727,7 @@ function searchfun() {
 }
 .n-layout-sider{
   background-color: rgba(250, 250, 250, 0.5);
+  /* background-color: rgba(32,33,35,1); */
 }
 .n-switch__button{
   font-size: 10px;

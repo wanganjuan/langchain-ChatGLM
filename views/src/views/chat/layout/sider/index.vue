@@ -129,3 +129,10 @@ watch(
   </template>
   <!-- <PromptStore v-model:visible="show" /> -->
 </template>
+
+<style>
+  .n-layout-sider-scroll-container {
+    overflow-x: hidden !important ;
+  }
+</style>
+
