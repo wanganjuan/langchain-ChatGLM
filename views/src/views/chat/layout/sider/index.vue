@@ -112,7 +112,7 @@ watch(
         </div>
         <!-- 会话界面 -->
         <div v-if="menu === 1">
-          <div class="p-4">
+          <div class="p-4 white-box">
             <NButton block @click="handleAdd">
               新建聊天
             </NButton>
@@ -133,6 +133,9 @@ watch(
 <style>
   .n-layout-sider-scroll-container {
     overflow-x: hidden !important ;
+  }
+  .white-box .n-button {
+    color: #fff
   }
 </style>
 

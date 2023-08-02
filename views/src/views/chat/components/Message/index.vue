@@ -101,8 +101,8 @@ async function handleCopy() {
 <template>
   <div
     ref="messageRef"
-    class="flex w-full mb-6 overflow-hidden"
-    :class="[{ 'flex-row-reverse': inversion }]"
+    class="flex w-full  overflow-hidden p-4 border-b border-black/10 text-gray-800"
+    :class="[{ 'flex-row-reverse': inversion, 'bg-white': inversion, 'text-gray-800': inversion, 'p-2': isMobile }]"
   >
     <div
       class="flex items-center justify-center flex-shrink-0 h-8 overflow-hidden rounded-full basis-8"
@@ -112,7 +112,7 @@ async function handleCopy() {
     </div>
     <div class="overflow-hidden text-sm " :class="[inversion ? 'items-end' : 'items-start']">
       <p class="text-xs text-[#b4bbc4]" :class="[inversion ? 'text-right' : 'text-left']">
-        {{ dateTime }}11
+        {{ dateTime }}
       </p>
       <div
         class="flex items-end gap-1 mt-2"

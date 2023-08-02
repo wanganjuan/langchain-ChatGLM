@@ -616,7 +616,6 @@ function searchfun() {
         <div
           id="image-wrapper"
           class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
-          :class="[isMobile ? 'p-2' : 'p-4']"
         >
           <template v-if="!dataSources.length">
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
@@ -726,8 +725,8 @@ function searchfun() {
   background-color: rgba(250, 250, 250, 0.5);
 }
 .n-layout-sider{
-  background-color: rgba(250, 250, 250, 0.5);
-  /* background-color: rgba(32,33,35,1); */
+  /* background-color: rgba(250, 250, 250, 0.5); */
+  background-color: rgba(32,33,35,1);
 }
 .n-switch__button{
   font-size: 10px;
@@ -735,5 +734,9 @@ function searchfun() {
 .shadow-md{
   box-shadow: 0 12px 40px 0 rgba(148,186,215,.2);
   border: 1px solid ;
+}
+
+.n-radio-group .n-radio-button {
+  color: #fff;
 }
 </style>
